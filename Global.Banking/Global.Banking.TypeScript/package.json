@@ -1,0 +1,15 @@
+{
+  "name": "global.banking.type-script",
+  "version": "0.0.0",
+  "description": "Global.Banking.TypeScript",
+  "main": "app.js",
+  "author": {
+    "name": "spratlrx"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.87",
+    "@types/colors": "^1.1.3",
+    "colors": "^1.1.2"
+  },
+  "dependencies": {}
+}
