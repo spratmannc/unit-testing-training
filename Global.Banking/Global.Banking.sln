@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScript", "TypeScript", 
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Global.Banking.TypeScript", "Global.Banking.TypeScript\Global.Banking.TypeScript.njsproj", "{E3F42CF6-80FD-462C-B729-E513518ECB9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Global.Banking.CSharp", "Global.Banking.CSharp\Global.Banking.CSharp.csproj", "{B0CA3042-19C1-48B1-9983-42011B5C6AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{E3F42CF6-80FD-462C-B729-E513518ECB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3F42CF6-80FD-462C-B729-E513518ECB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3F42CF6-80FD-462C-B729-E513518ECB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0CA3042-19C1-48B1-9983-42011B5C6AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0CA3042-19C1-48B1-9983-42011B5C6AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0CA3042-19C1-48B1-9983-42011B5C6AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0CA3042-19C1-48B1-9983-42011B5C6AE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E3F42CF6-80FD-462C-B729-E513518ECB9F} = {B06F3B6F-912B-405E-841A-9DD2CD5CD30A}
+		{B0CA3042-19C1-48B1-9983-42011B5C6AE6} = {EEA3FEFE-F854-4B2A-B8E4-70894A3AEAD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {232DF71D-DDA7-4FF6-828A-83FCA0A39805}
