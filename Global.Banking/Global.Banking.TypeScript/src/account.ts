@@ -1,6 +1,10 @@
 ﻿import { AccountHolder, IAccountHolder } from "./accountholder";
-import { AccountType } from "./accounttype";
 
+export enum AccountType {
+    Checking = 0,
+    Savings = 1,
+    COD = 2
+}
 
 export interface IAccount {
     /** Type of Account */

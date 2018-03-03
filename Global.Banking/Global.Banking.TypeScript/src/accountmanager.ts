@@ -2,10 +2,27 @@
 import { ITransaction, TransactionType } from "./transaction";
 import * as fs from "fs";
 
+export interface IAccountManager {
+    deposit(account: Account, amount: number): ITransaction;
+    withdraw(account: Account, amount: number): ITransaction;
+
+    load(accountNumber: string): Account;
+    save(account: Account): void
+}
+
+
 export class AccountManager {
 
     private nextId: number = 0;
-    private filePath: string = "./data/accounts.json";
+    private filePath: string;
+
+    /**
+     * Initializes an account manager
+     * @param jsonFilePath Path to the JSON file that stores all the accounts
+     */
+    constructor(jsonFilePath: string) {
+        this.filePath = jsonFilePath;
+    }
 
     deposit(account: Account, amount: number): ITransaction {
 
@@ -58,7 +75,7 @@ export class AccountManager {
         return transaction;
     }
 
-    apply(account: Account, transaction: ITransaction): void {
+    private apply(account: Account, transaction: ITransaction): void {
 
         if (transaction.succeeded) {
             account.balance = transaction.resultingBalance;

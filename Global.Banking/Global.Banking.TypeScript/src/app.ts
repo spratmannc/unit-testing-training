@@ -1,7 +1,6 @@
 ﻿import "colors";
 import * as readline from "readline";
-import { Account, IAccount } from "./account";
-import { AccountType } from "./accounttype";
+import { Account, AccountType } from "./account";
 import { AccountHolder } from "./accountholder";
 import { AccountManager } from "./accountmanager";
 
@@ -14,7 +13,7 @@ function displayAccount(acctNumber: string, rl: readline.ReadLine): void {
     clearScreen();
 
     // setup the account manager for loading/saving/manipulating accounts
-    let manager: AccountManager = new AccountManager();
+    let manager: AccountManager = new AccountManager("./data/accounts.json");
 
     // try to load an account
     let account: Account = manager.load(acctNumber);
