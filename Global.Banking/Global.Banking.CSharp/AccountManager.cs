@@ -73,6 +73,14 @@ namespace Global.Banking.CSharp
                 transaction.Message = $"Insufficient funds on hand to withdraw {amount.ToString("C2")}.  Cancelled.";
             }
 
+            // apply $25 minimum for Savings
+            if(account.Type == AccountType.Savings && transaction.ResultingBalance < 25)
+            {
+                transaction.Succeeded = false;
+                transaction.ResultingBalance = account.Balance;
+                transaction.Message = $"Insufficient funds beyond savings minimum of $25 to withdraw {amount.ToString("C2")}.  Cancelled.";
+            }
+
             // save to JSON file
             this.Apply(account, transaction);
 

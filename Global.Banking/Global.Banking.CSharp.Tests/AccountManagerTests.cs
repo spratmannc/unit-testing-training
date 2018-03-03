@@ -64,5 +64,22 @@ namespace Global.Banking.CSharp.Tests
             Assert.True(deposit.Succeeded);
             Assert.NotEqual(withdrawal.Id, deposit.Id);
         }
+
+        [Fact(DisplayName = "C# - Account Manager should block withdrawals if resulting balance would be less than $25")]
+        [Trait("Environment", "C#")]
+        [Trait("Class", "AccountManager")]
+        [Trait("Category", "Business Rule")]
+        public void ShouldBlockWithdrawalsIfSavingsAccountBelow25()
+        {
+            // Arrange
+            var manager = new AccountManager("accounts.json");
+            var account = manager.Load("22");
+
+            // Act
+            var withdrawal = manager.Withdraw(account, 20);
+
+            // Assert
+            Assert.False(withdrawal.Succeeded);
+        }
     }
 }
