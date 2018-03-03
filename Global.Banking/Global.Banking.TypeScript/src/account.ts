@@ -16,6 +16,10 @@ export interface IAccount {
     holder: IAccountHolder;
 }
 
+export interface IAccountRecords {
+    accounts: IAccount[];
+}
+
 export class Account {
 
     /** Type of Account */

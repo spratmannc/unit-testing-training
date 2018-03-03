@@ -1,24 +1,21 @@
-﻿import { Account, IAccount } from "./account";
+﻿import { Account, IAccount, IAccountRecords } from "./account";
 import { ITransaction, TransactionType } from "./transaction";
 import * as fs from "fs";
-import { IAccountRecords } from "./accountrecords";
-
 
 export class AccountManager {
 
-    nextId: number = 0;
+    private nextId: number = 0;
+    private filePath: string = "./data/accounts.json";
 
-    constructor(private account: Account) { }
-
-    deposit(amount: number): ITransaction {
+    deposit(account: Account, amount: number): ITransaction {
 
         // build successful transaction
         var transaction: ITransaction = {
             id: this.nextId + 1,
             type: TransactionType.Deposit,
-            accountNumber: this.account.number,
+            accountNumber: account.number,
             amount: amount,
-            resultingBalance: this.account.balance + amount,
+            resultingBalance: account.balance + amount,
             succeeded: true,
             message: `Successfully deposited $${amount.toFixed(2)}`
         };
@@ -26,24 +23,24 @@ export class AccountManager {
         // apply max balance rule
         if (transaction.resultingBalance > 1000) {
             transaction.succeeded = false;
-            transaction.resultingBalance = this.account.balance;
+            transaction.resultingBalance = account.balance;
             transaction.message = `A deposit of ${amount} would have exceeded the GFDIC max.  Cancelled.`;
         }
 
         // save to JSON file
-        this.apply(transaction);
+        this.apply(account, transaction);
 
         return transaction;
     }
 
-    withdraw(amount: number): ITransaction {
+    withdraw(account: Account, amount: number): ITransaction {
 
         var transaction: ITransaction = {
             id: this.nextId + 1,
             type: TransactionType.Withdrawal,
-            accountNumber: this.account.number,
+            accountNumber: account.number,
             amount: amount,
-            resultingBalance: this.account.balance - amount,
+            resultingBalance: account.balance - amount,
             succeeded: true,
             message: `Successfully withdrew $${amount.toFixed(2)}`
         };
@@ -51,48 +48,61 @@ export class AccountManager {
         // apply prevent NSF rule
         if (transaction.resultingBalance < 0) {
             transaction.succeeded = false;
-            transaction.resultingBalance = this.account.balance;
+            transaction.resultingBalance = account.balance;
             transaction.message = `Insufficient funds on hand to withdraw $${amount.toFixed(2)}.  Cancelled.`;
         }
 
         // save to JSON file
-        this.apply(transaction);
+        this.apply(account, transaction);
 
         return transaction;
     }
 
-    apply(transaction: ITransaction): void {
+    apply(account: Account, transaction: ITransaction): void {
 
         if (transaction.succeeded) {
-            this.account.balance = transaction.resultingBalance;
+            account.balance = transaction.resultingBalance;
         }
 
-        this.saveAccount();
+        this.save(account);
     }
 
+    load(accountNumber: string): Account {
 
-    saveAccount(): void {
+        let json: string = fs.readFileSync(this.filePath).toString();
 
-        let filePath: string = "./data/accounts.json";
+        let records: IAccountRecords = JSON.parse(json);
+
+        let query: IAccount[] = records.accounts.filter(r => r.number === accountNumber);
+
+        if (query.length) {
+            return new Account(query[0]);
+        } else {
+            return null;
+        }
+    }
+
+    save(account: Account): void {
 
         // read in the JSON
-        let json: string = fs.readFileSync(filePath).toString();
+        let json: string = fs.readFileSync(this.filePath).toString();
 
         // parse the records
         let records: IAccountRecords = JSON.parse(json);
 
         // find the one to update
-        let query: IAccount[] = records.accounts.filter(r => r.number === this.account.number);
+        let query: IAccount[] = records.accounts.filter(r => r.number === account.number);
 
         if (query.length) {
 
             let accountToUpdate = query[0];
 
             // update the balance
-            accountToUpdate.balance = this.account.balance;
+            accountToUpdate.balance = account.balance;
 
             // now save back to the file
-            fs.writeFileSync(filePath, JSON.stringify(records));
+            fs.writeFileSync(this.filePath, JSON.stringify(records));
         } 
     }
+
 }

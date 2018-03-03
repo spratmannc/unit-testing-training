@@ -2,22 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("colors");
 var readline = require("readline");
-var account_1 = require("./account");
-var accountrecords_1 = require("./accountrecords");
 var accountmanager_1 = require("./accountmanager");
 function clearScreen() {
     process.stdout.write('\x1B[2J\x1B[0f\u001b[0;0H');
 }
 function displayAccount(acctNumber, rl) {
     clearScreen();
-    var record = accountrecords_1.loadAccount("./data/accounts.json", acctNumber);
-    if (!record) {
+    // setup the account manager for loading/saving/manipulating accounts
+    var manager = new accountmanager_1.AccountManager();
+    // try to load an account
+    var account = manager.load(acctNumber);
+    if (!account) {
         console.log(("No account exists for number " + acctNumber).red);
         setTimeout(function () { return showMainMenu(rl); }, 2000);
     }
     else {
-        var account = new account_1.Account(record);
-        var manager_1 = new accountmanager_1.AccountManager(account);
         account.summarize();
         console.log("Menu:".cyan);
         console.log("\t1 - Deposit".cyan);
@@ -26,28 +25,10 @@ function displayAccount(acctNumber, rl) {
         rl.question("Option: ".green, function (option) {
             switch (option) {
                 case "1":
-                    rl.question("Amount: ".green, function (amount) {
-                        var trans = manager_1.deposit(parseFloat(amount));
-                        if (trans.succeeded) {
-                            displayAccount(acctNumber, rl);
-                        }
-                        else {
-                            console.log(trans.message.red);
-                            setTimeout(function () { return displayAccount(acctNumber, rl); }, 2000);
-                        }
-                    });
+                    processDeposit(rl, manager, account);
                     break;
                 case "2":
-                    rl.question("Amount: ".yellow, function (amount) {
-                        var trans = manager_1.withdraw(parseFloat(amount));
-                        if (trans.succeeded) {
-                            displayAccount(acctNumber, rl);
-                        }
-                        else {
-                            console.log(trans.message.red);
-                            setTimeout(function () { return displayAccount(acctNumber, rl); }, 2000);
-                        }
-                    });
+                    processWithdrawal(rl, manager, account);
                     break;
                 default:
                     showMainMenu(rl);
@@ -55,6 +36,34 @@ function displayAccount(acctNumber, rl) {
             }
         });
     }
+}
+function processWithdrawal(rl, manager, account) {
+    // ask the user for the amount
+    rl.question("Amount: ".yellow, function (amount) {
+        // process the transaction
+        var trans = manager.withdraw(account, parseFloat(amount));
+        if (trans.succeeded) {
+            displayAccount(account.number, rl);
+        }
+        else {
+            console.log(trans.message.red);
+            setTimeout(function () { return displayAccount(account.number, rl); }, 2000);
+        }
+    });
+}
+function processDeposit(rl, manager, account) {
+    // ask the user for the amount
+    rl.question("Amount: ".green, function (amount) {
+        // process the transaction
+        var trans = manager.deposit(account, parseFloat(amount));
+        if (trans.succeeded) {
+            displayAccount(account.number, rl);
+        }
+        else {
+            console.log(trans.message.red);
+            setTimeout(function () { return displayAccount(account.number, rl); }, 2000);
+        }
+    });
 }
 function showMainMenu(rl) {
     clearScreen();

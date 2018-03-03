@@ -34,7 +34,6 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\account.ts" />
     <TypeScriptCompile Include="src\accountholder.ts" />
-    <TypeScriptCompile Include="src\accountrecords.ts" />
     <TypeScriptCompile Include="src\accountmanager.ts" />
     <TypeScriptCompile Include="src\accounttype.ts" />
     <TypeScriptCompile Include="src\app.ts" />

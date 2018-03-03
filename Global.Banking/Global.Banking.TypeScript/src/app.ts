@@ -3,7 +3,6 @@ import * as readline from "readline";
 import { Account, IAccount } from "./account";
 import { AccountType } from "./accounttype";
 import { AccountHolder } from "./accountholder";
-import { loadAccount } from "./accountrecords";
 import { AccountManager } from "./accountmanager";
 
 function clearScreen(): void {
@@ -11,17 +10,20 @@ function clearScreen(): void {
 }
 
 function displayAccount(acctNumber: string, rl: readline.ReadLine): void {
+
     clearScreen();
 
-    let record: IAccount = loadAccount("./data/accounts.json", acctNumber);
+    // setup the account manager for loading/saving/manipulating accounts
+    let manager: AccountManager = new AccountManager();
 
-    if (!record) {
+    // try to load an account
+    let account: Account = manager.load(acctNumber);
+
+    if (!account) {
         console.log(`No account exists for number ${acctNumber}`.red);
         setTimeout(() => showMainMenu(rl), 2000);
     } else {
 
-        let account: Account = new Account(record);
-        let manager: AccountManager = new AccountManager(account);
         account.summarize();
 
         console.log("Menu:".cyan);
@@ -33,32 +35,11 @@ function displayAccount(acctNumber: string, rl: readline.ReadLine): void {
 
             switch (option) {
                 case "1":
-
-                    rl.question("Amount: ".green, (amount) => {
-                        let trans = manager.deposit(parseFloat(amount));
-
-                        if (trans.succeeded) {
-                            displayAccount(acctNumber, rl);
-                        } else {
-                            console.log(trans.message.red);
-                            setTimeout(() => displayAccount(acctNumber, rl), 2000);
-                        }
-                    });
-                    
+                    processDeposit(rl, manager, account);
                     break;
 
                 case "2":
-                    rl.question("Amount: ".yellow, (amount) => {
-
-                        let trans = manager.withdraw(parseFloat(amount));
-
-                        if (trans.succeeded) {
-                            displayAccount(acctNumber, rl);
-                        } else {
-                            console.log(trans.message.red);
-                            setTimeout(() => displayAccount(acctNumber, rl), 2000);
-                        }
-                    });
+                    processWithdrawal(rl, manager, account);
                     break;
 
                 default:
@@ -67,6 +48,42 @@ function displayAccount(acctNumber: string, rl: readline.ReadLine): void {
             }
         });
     }
+}
+
+function processWithdrawal(rl: readline.ReadLine, manager: AccountManager, account: Account) {
+
+    // ask the user for the amount
+    rl.question("Amount: ".yellow, (amount) => {
+
+        // process the transaction
+        let trans = manager.withdraw(account, parseFloat(amount));
+
+        if (trans.succeeded) {
+            displayAccount(account.number, rl);
+        }
+        else {
+            console.log(trans.message.red);
+            setTimeout(() => displayAccount(account.number, rl), 2000);
+        }
+    });
+}
+
+function processDeposit(rl: readline.ReadLine, manager: AccountManager, account: Account) {
+
+    // ask the user for the amount
+    rl.question("Amount: ".green, (amount) => {
+
+        // process the transaction
+        let trans = manager.deposit(account, parseFloat(amount));
+
+        if (trans.succeeded) {
+            displayAccount(account.number, rl);
+        }
+        else {
+            console.log(trans.message.red);
+            setTimeout(() => displayAccount(account.number, rl), 2000);
+        }
+    });
 }
 
 function showMainMenu(rl: readline.ReadLine): void {
