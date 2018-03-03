@@ -27,5 +27,19 @@ namespace Global.Banking.CSharp
         public double Balance { get; set; }
 
         public AccountHolder Holder{ get; set; }
+
+        public void Summarize()
+        {
+            "**********************************************".WriteLine(ConsoleColor.Green);
+            "  Account: ".Write(ConsoleColor.Cyan);
+            $"{Number}".WriteLine(ConsoleColor.White);
+            "  Type:    ".Write(ConsoleColor.Cyan);
+            $"{Enum.GetName(typeof(AccountType), Type)}".WriteLine(ConsoleColor.White);
+
+            "  Balance: ".Write(ConsoleColor.Cyan);
+            $"{Balance.ToString("C2")}".WriteLine(ConsoleColor.White);
+            "**********************************************".WriteLine(ConsoleColor.Green);
+
+        }
     }
 }
