@@ -28,7 +28,7 @@ export class AccountManager {
 
         // build successful transaction
         var transaction: ITransaction = {
-            id: this.nextId + 1,
+            id: this.nextId++,
             type: TransactionType.Deposit,
             accountNumber: account.number,
             amount: amount,
@@ -53,7 +53,7 @@ export class AccountManager {
     withdraw(account: Account, amount: number): ITransaction {
 
         var transaction: ITransaction = {
-            id: this.nextId + 1,
+            id: this.nextId++,
             type: TransactionType.Withdrawal,
             accountNumber: account.number,
             amount: amount,

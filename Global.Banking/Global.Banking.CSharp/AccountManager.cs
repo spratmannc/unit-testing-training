@@ -28,7 +28,7 @@ namespace Global.Banking.CSharp
             // build successful transaction
             var transaction = new Transaction
             {
-                Id = this._nextId + 1,
+                Id = this._nextId++,
                 Type = TransactionType.Deposit,
                 AccountNumber = account.Number,
                 Amount = amount,
@@ -56,7 +56,7 @@ namespace Global.Banking.CSharp
             // build successful transaction
             var transaction = new Transaction
             {
-                Id = this._nextId + 1,
+                Id = this._nextId++,
                 Type = TransactionType.Withdrawal,
                 AccountNumber = account.Number,
                 Amount = amount,
