@@ -1,4 +1,4 @@
-﻿import { Account, IAccount, IAccountRecords } from "./account";
+﻿import { Account, IAccount, IAccountRecords, AccountType } from "./account";
 import { ITransaction, TransactionType } from "./transaction";
 import * as fs from "fs";
 
@@ -67,6 +67,13 @@ export class AccountManager {
             transaction.succeeded = false;
             transaction.resultingBalance = account.balance;
             transaction.message = `Insufficient funds on hand to withdraw $${amount.toFixed(2)}.  Cancelled.`;
+        }
+
+        // apply $25 minimum for Savings
+        if (account.type === AccountType.Savings && transaction.resultingBalance < 25) {
+            transaction.succeeded = false;
+            transaction.resultingBalance = account.balance;
+            transaction.message = `Insufficient funds beyond savings minimum of $25 to withdraw $${amount.toFixed(2)}.  Cancelled.`;
         }
 
         // save to JSON file

@@ -51,4 +51,17 @@ describe("Account Manager", () => {
         expect(deposit.succeeded).to.be.true;
         expect(withdrawal.id).not.to.equal(deposit.id);
     });
+
+    it("should fail withdrawals if savings account would drop below $25", () => {
+
+        // Arrange
+        var manager = new AccountManager("./data/accounts.json");
+        var account = manager.load("22");
+
+        // Act
+        var withdrawal = manager.withdraw(account, 20);
+
+        // Assert
+        expect(withdrawal.succeeded).to.be.false;
+    });
 });
