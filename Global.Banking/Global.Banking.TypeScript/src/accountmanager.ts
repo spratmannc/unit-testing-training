@@ -41,7 +41,7 @@ export class AccountManager {
         if (transaction.resultingBalance > 1000) {
             transaction.succeeded = false;
             transaction.resultingBalance = account.balance;
-            transaction.message = `A deposit of ${amount} would have exceeded the GFDIC max.  Cancelled.`;
+            transaction.message = `A deposit of $${amount} would have exceeded the GFDIC max.  Cancelled.`;
         }
 
         // save to JSON file
